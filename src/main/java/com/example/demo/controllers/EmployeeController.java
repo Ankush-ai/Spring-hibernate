@@ -1,0 +1,60 @@
+package com.example.demo.controllers;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.demo.model.Employee;
+import com.example.demo.service.EmployeeService;
+
+@RestController()
+@RequestMapping("/api/v1")
+public class EmployeeController {
+	
+	@Autowired
+	EmployeeService empService;
+	
+	@GetMapping("/employee")
+	public List<Employee> get(){
+		return empService.get();
+	}
+	
+	@PostMapping("/employee")
+	public Employee save(@RequestBody Employee employee) {
+		 empService.save(employee);
+		 return employee;
+	}
+	
+	@GetMapping("employee/{id}")
+	public Employee get(@PathVariable  int id) {
+		Employee emp = empService.get(id);
+		if(emp==null) {
+			throw new RuntimeException("Employee not found for id" +id);
+		}
+		else {
+			return emp;
+		}
+	}
+	
+	@PutMapping("/employee")
+	public Employee update(@RequestBody Employee emp) {
+		 empService.save(emp);
+		  return emp;
+	}
+	
+	@DeleteMapping("/employee/{id}")
+	public String delete(@PathVariable int id) {
+		empService.delete(id);
+		return "Employee has been deleted with id:"+id;
+	}
+	
+
+}
